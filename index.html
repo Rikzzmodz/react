@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React CH · RIKZZ STORE</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f7fa 0%, #e9f2f0 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .store-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Main card */
+        .card {
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            box-shadow: 0 30px 70px -20px rgba(0, 70, 60, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .store-header {
+            background: linear-gradient(135deg, #0a3028, #166b5b);
+            padding: 32px 32px 24px 32px;
+            color: white;
+            position: relative;
+        }
+
+        .store-header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .header-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nmid-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .qris-badge {
+            background: #00b3a1;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Product area */
+        .product-area {
+            padding: 32px 32px 16px 32px;
+        }
+
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .wa-icon-large {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #25d366, #128c7e);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 15px 20px -10px #128c7e;
+        }
+
+        .product-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a3a33;
+        }
+
+        /* Package selection - bisa dipilih */
+        .package-section {
+            margin: 28px 0 24px 0;
+        }
+
+        .package-title {
+            font-weight: 600;
+            color: #2d4a42;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .package-options {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .package-card {
+            flex: 1;
+            min-width: 160px;
+            background: white;
+            border: 2px solid #d0e2dc;
+            border-radius: 28px;
+            padding: 24px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .package-card.selected {
+            border-color: #128c7e;
+            background: #f0fcf9;
+            box-shadow: 0 10px 25px -12px #128c7e;
+        }
+
+        .package-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .package-price {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #166b5b;
+            line-height: 1;
+        }
+
+        .package-desc {
+            color: #4d6b63;
+            margin: 10px 0 5px;
+            font-weight: 500;
+        }
+
+        .package-badge {
+            background: #e1f0eb;
+            color: #0a3028;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Form fields */
+        .form-section {
+            padding: 0 32px 20px 32px;
+        }
+
+        .field-group {
+            margin-bottom: 24px;
+        }
+
+        .field-group label {
+            display: block;
+            font-weight: 600;
+            color: #1e3a33;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .field-group input,
+        .field-group textarea {
+            width: 100%;
+            padding: 18px 24px;
+            background: #f8fdfb;
+            border: 2px solid #dae9e3;
+            border-radius: 40px;
+            font-size: 1rem;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        .field-group input:focus,
+        .field-group textarea:focus {
+            border-color: #128c7e;
+            background: white;
+            box-shadow: 0 8px 20px -15px #128c7e;
+        }
+
+        .field-group textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .hint-text {
+            font-size: 0.85rem;
+            color: #6e8c84;
+            margin-top: 6px;
+            margin-left: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 20px 28px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 12px 0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #00a884, #128c7e);
+            color: white;
+            box-shadow: 0 15px 25px -12px #128c7e;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 30px -10px #0a6b5c;
+        }
+
+        .btn-payment {
+            background: #1e3f4a;
+            color: white;
+        }
+
+        .btn-payment:hover {
+            background: #265c68;
+        }
+
+        /* Payment area */
+        .payment-area {
+            background: #f0f9f6;
+            border-radius: 40px;
+            padding: 32px;
+            margin: 20px 0;
+            border: 2px solid #c0e0d6;
+        }
+
+        .qris-box {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .qris-box img {
+            max-width: 240px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);
+        }
+
+        .dana-box {
+            background: #1a3a33;
+            color: white;
+            padding: 16px 28px;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .upload-box {
+            background: white;
+            border: 2px dashed #128c7e;
+            border-radius: 40px;
+            padding: 24px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .upload-box input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #dae9e3;
+            border-radius: 40px;
+            background: #f8fdfb;
+        }
+
+        .status-message {
+            background: #d4efe7;
+            color: #166b5b;
+            padding: 16px 24px;
+            border-radius: 40px;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        /* Channel & Help Section - Tetap ada */
+        .channel-help-section {
+            padding: 16px 32px 32px 32px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #e0f0ea;
+        }
+
+        .channel-link {
+            background: #1e3a33;
+            color: white;
+            text-decoration: none;
+            padding: 16px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            flex: 1;
+            min-width: 200px;
+            transition: 0.2s;
+        }
+
+        .channel-link:hover {
+            background: #2a5348;
+            gap: 16px;
+        }
+
+        .help-contact {
+            background: #f0f7f5;
+            color: #166b5b;
+            text-decoration: none;
+            padding: 16px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            border: 2px solid #128c7e;
+            transition: 0.2s;
+        }
+
+        .help-contact:hover {
+            background: white;
+            gap: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 32px 28px 32px;
+            color: #6a8f85;
+            border-top: 1px solid #d0e8e0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="store-container">
+    <div class="card">
+        <!-- Header -->
+        <div class="store-header">
+            <h1>RIKZZ STORE</h1>
+            <div class="header-info">
+                <span class="nmid-badge"><i class="fas fa-id-card"></i> ID1025440536981</span>
+                <span class="qris-badge"><i class="fas fa-qrcode"></i> A01 · QRIS</span>
+            </div>
+            <div style="margin-top: 16px; opacity: 0.9; font-size: 0.9rem;">
+                <i class="fas fa-check-circle"></i> www.aspi-qris.id
+            </div>
+        </div>
+
+        <!-- Product -->
+        <div class="product-area">
+            <div class="product-header">
+                <div class="wa-icon-large">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h2>React CH <span style="font-size: 1rem; background: #e1f0eb; padding: 5px 15px; border-radius: 40px; color: #166b5b; margin-left: 10px;">otomatis</span></h2>
+            </div>
+
+            <!-- Package selection - BISA DIPILIH -->
+            <div class="package-section">
+                <div class="package-title"><i class="fas fa-tag"></i> Pilih paket:</div>
+                <div class="package-options">
+                    <!-- Paket 300 -->
+                    <label class="package-card" id="paket300">
+                        <input type="radio" name="paket" value="300" checked>
+                        <div class="package-price">Rp 300</div>
+                        <div class="package-desc">1x react pesan</div>
+                        <span class="package-badge"><i class="fas fa-bolt"></i> ringan</span>
+                    </label>
+                    <!-- Paket 500 -->
+                    <label class="package-card" id="paket500">
+                        <input type="radio" name="paket" value="500">
+                        <div class="package-price">Rp 500</div>
+                        <div class="package-desc">2x react pesan</div>
+                        <span class="package-badge"><i class="fas fa-fire"></i> hemat</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form order -->
+        <div class="form-section">
+            <button class="btn btn-primary" id="toggleOrderBtn">
+                <i class="fas fa-pen"></i> ORDER SEKARANG
+            </button>
+
+            <div id="orderFields" class="hidden" style="margin-top: 24px;">
+                <!-- Link saluran -->
+                <div class="field-group">
+                    <label><i class="fas fa-link"></i> Link saluran WhatsApp</label>
+                    <input type="url" id="linkSaluran" placeholder="https://whatsapp.com/channel/...">
+                </div>
+
+                <!-- Emoji bebas -->
+                <div class="field-group">
+                    <label><i class="far fa-smile"></i> Emoji (bebas)</label>
+                    <input type="text" id="emojiBebas" placeholder="Contoh: 🥶🥵🔥 atau bebas" value="🥶">
+                    <div class="hint-text"><i class="fas fa-info-circle"></i> Bisa pilih emoji apa saja</div>
+                </div>
+
+                <!-- Catatan -->
+                <div class="field-group">
+                    <label><i class="fas fa-pencil-alt"></i> Catatan untuk owner (opsional)</label>
+                    <textarea id="catatanOwner" placeholder="Tambah catatan jika perlu...jika order 500p maka kasih link salurannya lagi di catatan"></textarea>
+                </div>
+
+                <!-- Tombol Pay -->
+                <button class="btn btn-payment" id="payBtn">
+                    <i class="fas fa-credit-card"></i> LANJUT BAYAR
+                </button>
+            </div>
+        </div>
+
+        <!-- Payment section -->
+        <div id="paymentSection" class="hidden" style="padding: 0 32px 24px 32px;">
+            <div class="payment-area">
+                <!-- QRIS Image -->
+                <div class="qris-box">
+                    <img src="https://files.catbox.moe/gcutz7.jpeg" 
+                         alt="QRIS RIKZZ STORE"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23ffffff\'/%3E%3Ctext x=\'40\' y=\'100\' font-size=\'20\'%3EQRIS%3C/text%3E%3C/svg%3E';">
+                </div>
+
+                <!-- DANA -->
+                <div style="text-align: center;">
+                    <div class="dana-box">
+                        <i class="fas fa-phone-alt"></i> 0815 5356 9793
+                    </div>
+                    <p style="color: #2d5a4f; margin-top: 5px;">Scan QRIS atau transfer ke DANA</p>
+                </div>
+
+                <!-- Upload bukti -->
+                <div class="upload-box">
+                    <input type="file" id="buktiPayment" accept="image/*,application/pdf">
+                    <p style="margin-top: 12px; color: #46776b;"><i class="fas fa-cloud-upload-alt"></i> Upload bukti transfer</p>
+                </div>
+
+                <!-- Tombol Kirim -->
+                <button class="btn btn-primary" id="kirimKeBotBtn">
+                    <i class="fab fa-telegram"></i> KIRIM BUKTI
+                </button>
+
+                <div id="statusProses" class="status-message hidden">
+                    <i class="fas fa-clock"></i> Mohon tunggu 1-5 menit jika admin online
+                </div>
+            </div>
+        </div>
+
+        <!-- CHANNEL & HELP SECTION - Tetap ada dan jelas -->
+        <div class="channel-help-section">
+            <!-- Channel admin -->
+            <a href="https://whatsapp.com/channel/0029Vb7L0SfFCCoVujzOd73G" target="_blank" class="channel-link">
+                <i class="fab fa-whatsapp"></i> CHANNEL ADMIN
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 40px;">jam kerja</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            
+            <!-- Bantuan Telegram @rikzz99 -->
+            <a href="https://t.me/rikzz99" target="_blank" class="help-contact">
+                <i class="fab fa-telegram"></i> @rikzz99
+                <span style="font-size: 0.8rem; color: #46776b;">bantuan</span>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <i class="fas fa-bolt"></i> React CH · pilih paket 300/500
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Config
+        const BOT_TOKEN = '8635572501:AAHXDXYYdUJRiloxp5igCO8TXr47x9X4WAw';
+        const OWNER_ID = '6769457591';
+
+        // DOM elements
+        const toggleBtn = document.getElementById('toggleOrderBtn');
+        const orderFields = document.getElementById('orderFields');
+        const payBtn = document.getElementById('payBtn');
+        const paymentSection = document.getElementById('paymentSection');
+        const kirimBtn = document.getElementById('kirimKeBotBtn');
+        const statusMsg = document.getElementById('statusProses');
+        
+        // Inputs
+        const linkInput = document.getElementById('linkSaluran');
+        const emojiInput = document.getElementById('emojiBebas');
+        const catatanInput = document.getElementById('catatanOwner');
+        const fileInput = document.getElementById('buktiPayment');
+        
+        // Package radio
+        const paket300 = document.getElementById('paket300');
+        const paket500 = document.getElementById('paket500');
+        const radio300 = document.querySelector('input[value="300"]');
+        const radio500 = document.querySelector('input[value="500"]');
+
+        // Visual untuk package selected
+        function updatePackageSelected() {
+            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+            if (radio300.checked) paket300.classList.add('selected');
+            if (radio500.checked) paket500.classList.add('selected');
+        }
+        radio300.addEventListener('change', updatePackageSelected);
+        radio500.addEventListener('change', updatePackageSelected);
+        updatePackageSelected(); // inisialisasi
+
+        // Toggle order form
+        toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (orderFields.classList.contains('hidden')) {
+                orderFields.classList.remove('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i> TUTUP FORM';
+            } else {
+                orderFields.classList.add('hidden');
+                toggleBtn.innerHTML = '<i class="fas fa-pen"></i> ORDER SEKARANG';
+                paymentSection.classList.add('hidden');
+            }
+        });
+
+        // Show payment
+        payBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!linkInput.value.trim()) {
+                alert('Masukkan link saluran');
+                linkInput.focus();
+                return;
+            }
+            if (!emojiInput.value.trim()) {
+                alert('Masukkan emoji');
+                emojiInput.focus();
+                return;
+            }
+            paymentSection.classList.remove('hidden');
+            paymentSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Kirim ke Telegram
+        kirimBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            // Validasi
+            if (!linkInput.value.trim() || !emojiInput.value.trim()) {
+                alert('Lengkapi link dan emoji');
+                return;
+            }
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Upload bukti payment');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            if (!file.type.match('image.*') && file.type !== 'application/pdf') {
+                alert('Hanya gambar atau PDF');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                alert('Maksimal 10MB');
+                return;
+            }
+
+            // Dapatkan paket yang dipilih
+            const selectedPaket = radio300.checked ? '300 (1x react)' : '500 (2x react)';
+
+            // Tampilkan statu
