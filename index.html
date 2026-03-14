@@ -457,7 +457,7 @@
                 <!-- Catatan -->
                 <div class="field-group">
                     <label><i class="fas fa-pencil-alt"></i> Catatan untuk owner (opsional)</label>
-                    <textarea id="catatanOwner" placeholder="Tambah catatan jika perlu...jika order 500p maka kasih link salurannya lagi di catatan"></textarea>
+                    <textarea id="catatanOwner" placeholder="Tambah catatan jika perlu..."></textarea>
                 </div>
 
                 <!-- Tombol Pay -->
@@ -618,4 +618,34 @@
             // Dapatkan paket yang dipilih
             const selectedPaket = radio300.checked ? '300 (1x react)' : '500 (2x react)';
 
-            // Tampilkan statu
+            // Tampilkan status
+            statusMsg.classList.remove('hidden');
+
+            try {
+                const caption = `🔔 ORDER REACT CH\n\n📎 Link: ${linkInput.value}\n😎 Emoji: ${emojiInput.value}\n📝 Catatan: ${catatanInput.value || '-'}\n💰 Paket: Rp ${selectedPaket}\n🖼️ Bukti terlampir`;
+
+                const formData = new FormData();
+                formData.append('chat_id', OWNER_ID);
+                formData.append('caption', caption);
+                formData.append('document', file);
+
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (!response.ok || !result.ok) {
+                    throw new Error('Gagal kirim');
+                }
+
+                alert('✅ Berhasil terkirim! ' + statusMsg.innerText);
+            } catch (error) {
+                alert('Error: ' + error.message);
+                statusMsg.classList.add('hidden');
+            }
+        });
+    })();
+</script>
+</body>
+</html>
